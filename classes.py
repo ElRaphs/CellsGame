@@ -16,7 +16,7 @@ class MMButton:
     def update(self, screen):
         mpos = pg.mouse.get_pos()
         GColor = self.color1
-        pg.draw.rect(screen, (255, 0, 0), self.rect)
+        #pg.draw.rect(screen, (255, 0, 0), self.rect)
 
         if self.rect.collidepoint(mpos):
             GColor = self.color2
