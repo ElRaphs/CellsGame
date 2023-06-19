@@ -1,7 +1,7 @@
 import pygame as pg
-from sys import exit
 from pygame.locals import *
 from functions import *
+from variables import *
 
 pg.init()
 
@@ -26,4 +26,15 @@ class MMButton:
         draw_text(self.text, self.font, GColor, screen,
                    self.rect.x+5, self.rect.y+5)
         
+class Energy(pg.sprite.Sprite):
+    def __init__(self, x, y):
+        super().__init__()
+        self.image = pg.Surface((5, 5))
+        self.image.fill(amarelo)
+        self.rect = self.image.get_rect()
+        self.rect.center = (x, y)
+
+    #def update(self, cell_group):
+        #if pg.sprite.collide_rect(self, cell_group):
+            #self.kill()
         

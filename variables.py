@@ -13,8 +13,11 @@ branco = (255, 255, 255)
 verde = (0, 255, 0)
 vermelho = (255, 0, 0)
 azul = (0, 0, 255)
+amarelo = (242, 231, 0)
+rosa = (236, 0, 242)
+cinza = (150, 150, 150)
 
-MMbg = pg.image.load('./images/MMbg.jpg')
+MMbg = pg.transform.scale(pg.image.load('./images/MMbg.jpg'), (largura, altura))
 
 MMfont = pg.font.Font('./fonts/MMfont.ttf', 100)
 MMBfont = pg.font.Font('./fonts/MMfont.ttf', 50)
