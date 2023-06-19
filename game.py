@@ -42,6 +42,7 @@ def main_menu():
 
 def level1():
     energies = pg.sprite.Group()
+    
     for c in range(500):
         energy = Energy(randint(0, largura), randint(0, altura))
         energies.add(energy)
@@ -51,6 +52,9 @@ def level1():
 
         energies.draw(tela)
         energies.update()
+        cells.draw(tela)
+        cells.update(tela, azul)
+        
 
         for event in pg.event.get():
             if event.type == QUIT:
