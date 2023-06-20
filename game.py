@@ -43,7 +43,7 @@ def main_menu():
 def level1():
     energies = pg.sprite.Group()
     global test_cell
-    for c in range(500):
+    for c in range(200):
         energy = Energy(randint(0, largura), randint(0, altura))
         energies.add(energy)
     while True:
@@ -55,10 +55,13 @@ def level1():
         cells.draw(tela)
         cells.update(tela, azul)
         
-        if test_cell.energy >= 1:
-            test_cell = Cell(-1, 1, test_cell.rect.x+5, test_cell.rect.y+5)
-            cells.add(test_cell)
-            test_cell.energy = 0
+        collisions = pg.sprite.groupcollide(cells, energies, False, True)
+        for cell, energy_list in collisions.items():
+            for energy in energy_list:
+                new_cell1 = Cell(randint(-3,3), randint(-3,3), cell.rect.x + 5, cell.rect.y + 5)
+                new_cell2 = Cell(randint(-3,3), randint(-3,3), cell.rect.x - 5, cell.rect.y - 5)
+                cells.add(new_cell1, new_cell2)
+                cells.remove(cell)
 
         for event in pg.event.get():
             if event.type == QUIT:
