@@ -16,6 +16,7 @@ azul = (0, 0, 255)
 amarelo = (242, 231, 0)
 rosa = (236, 0, 242)
 cinza = (150, 150, 150)
+preto = (0, 0, 0)
 
 MMbg = pg.transform.scale(pg.image.load('./images/MMbg.jpg'), (largura, altura))
 

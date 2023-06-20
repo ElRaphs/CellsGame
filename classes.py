@@ -28,19 +28,23 @@ class MMButton:
                    self.rect.x+5, self.rect.y+5)
         
 class Cell(pg.sprite.Sprite):
-    def __init__(self, xvel, yvel, x, y):
+    def __init__(self, xvel, yvel, x, y, energy):
         super().__init__()
-        self.image = pg.Surface((int(10*sqrt(2)), int(10*sqrt(2))))
+        self.radius = 10
+        self.image = pg.Surface((int(self.radius*sqrt(2)), int(self.radius*sqrt(2))))
         self.rect = self.image.get_rect()
-        self.energy = 0
         self.xvel = xvel
         self.yvel = yvel
         self.rect.x = x
         self.rect.y = y
+        self.energy = energy
 
     def update(self, screen, color):
-        pg.draw.circle(screen, color, self.rect.center, 10)
+        self.energy -= 1
+        pg.draw.circle(screen, color, self.rect.center, self.radius)
         #pg.draw.rect(screen, vermelho, self.rect)
+        pg.draw.circle(screen, preto, self.rect.center, self.radius/2)
+
         
         self.rect.x += self.xvel
         self.rect.y += self.yvel
@@ -49,8 +53,11 @@ class Cell(pg.sprite.Sprite):
             self.xvel *= -1
         if self.rect.bottom >= altura or self.rect.top <= 0:
             self.yvel *= -1
+
+        if self.energy <= 0:
+            self.kill()
         
-test_cell = Cell(1, 1, 100, 100)
+test_cell = Cell(1, 1, 100, 100, 300)
         
 class Energy(pg.sprite.Sprite):
     def __init__(self, x, y):
@@ -62,7 +69,7 @@ class Energy(pg.sprite.Sprite):
 
     def update(self):
         if pg.sprite.collide_rect(self, test_cell):
-            test_cell.energy += 1
+            test_cell.energy += 100
             self.kill()
 
 cells = pg.sprite.Group()
