@@ -42,7 +42,7 @@ def main_menu():
 
 def level1():
     energies = pg.sprite.Group()
-    
+    global test_cell
     for c in range(500):
         energy = Energy(randint(0, largura), randint(0, altura))
         energies.add(energy)
@@ -55,6 +55,10 @@ def level1():
         cells.draw(tela)
         cells.update(tela, azul)
         
+        if test_cell.energy >= 1:
+            test_cell = Cell(-1, 1, test_cell.rect.x+5, test_cell.rect.y+5)
+            cells.add(test_cell)
+            test_cell.energy = 0
 
         for event in pg.event.get():
             if event.type == QUIT:

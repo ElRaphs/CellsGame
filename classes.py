@@ -49,9 +49,6 @@ class Cell(pg.sprite.Sprite):
             self.xvel *= -1
         if self.rect.bottom >= altura or self.rect.top <= 0:
             self.yvel *= -1
-
-        if self.energy == 1:
-            self.energy = 0
         
 test_cell = Cell(1, 1, 100, 100)
         
