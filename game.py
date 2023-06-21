@@ -58,10 +58,17 @@ def level1():
         collisions = pg.sprite.groupcollide(cells, energies, False, True)
         for cell, energy_list in collisions.items():
             for energy in energy_list:
-                speed_x = uniform(-2, -0.1) if random() < 0.5 else uniform(0.1, 2)
-                speed_y = uniform(-2, -0.1) if random() < 0.5 else uniform(0.1, 2)
-                new_cell1 = Cell(speed_x, speed_y, cell.rect.x, cell.rect.y, 300)
-                new_cell2 = Cell(speed_x, speed_y, cell.rect.x, cell.rect.y, 300)
+                dx1 = randint(-1, 1)
+                dx2 = randint(-1, 1)
+                dy1 = randint(-1, 1)
+                dy2 = randint(-1, 1)
+                if (dx1 == 0 and dy1 == 0) or (dx2 == 0 and dy2 == 0):
+                    dx1 = -1
+                    dx2 = 1
+                    dy1 = -1
+                    dy2 = 1
+                new_cell1 = Cell(1*dx1, 1*dy1, cell.rect.x, cell.rect.y, 300)
+                new_cell2 = Cell(1*dx2, 1*dy2, cell.rect.x, cell.rect.y, 300)
                 cells.add(new_cell1, new_cell2)
                 cells.remove(cell)
 
