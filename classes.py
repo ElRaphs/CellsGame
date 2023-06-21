@@ -3,6 +3,7 @@ from pygame.locals import *
 from functions import *
 from variables import *
 from math import sqrt
+from random import *
 
 pg.init()
 
@@ -44,7 +45,6 @@ class Cell(pg.sprite.Sprite):
         pg.draw.circle(screen, color, self.rect.center, self.radius)
         #pg.draw.rect(screen, vermelho, self.rect)
         pg.draw.circle(screen, preto, self.rect.center, self.radius/2)
-
         
         self.rect.x += self.xvel
         self.rect.y += self.yvel
