@@ -29,7 +29,7 @@ class MMButton:
                    self.rect.x+5, self.rect.y+5)
         
 class Cell(pg.sprite.Sprite):
-    def __init__(self, xvel, yvel, x, y, energy):
+    def __init__(self, xvel, yvel, x, y, energy, color):
         super().__init__()
         self.radius = 10
         self.image = pg.Surface((int(self.radius*sqrt(2)), int(self.radius*sqrt(2))))
@@ -39,10 +39,11 @@ class Cell(pg.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
         self.energy = energy
+        self.color = color
 
-    def update(self, screen, color):
+    def update(self, screen):
         self.energy -= 1
-        pg.draw.circle(screen, color, self.rect.center, self.radius)
+        pg.draw.circle(screen, self.color, self.rect.center, self.radius)
         #pg.draw.rect(screen, vermelho, self.rect)
         pg.draw.circle(screen, preto, self.rect.center, self.radius/2)
         
@@ -57,7 +58,7 @@ class Cell(pg.sprite.Sprite):
         if self.energy <= 0:
             self.kill()
         
-test_cell = Cell(1, 1, 100, 100, 300)
+test_cell = Cell(1, 1, 100, 100, 300, azul)
         
 class Energy(pg.sprite.Sprite):
     def __init__(self, x, y):
