@@ -42,19 +42,16 @@ def main_menu():
 
 def level1():
     energies = pg.sprite.Group()
+    cells = pg.sprite.Group()
+    cells.add(test_cell)
+
     for c in range(500):
         energy = Energy(randint(0, largura), randint(0, altura))
         energies.add(energy)
 
-    cor1 = azul
-    cor = cor1
-    cor2 = vermelho
-    chance = 0
-
     while True:
         relogio.tick(fps)
         tela.fill(cinza)
-
 
         energies.draw(tela)
         energies.update()
@@ -64,18 +61,6 @@ def level1():
         collisions = pg.sprite.groupcollide(cells, energies, False, True)
         for cell, energy_list in collisions.items():
             for energy in energy_list:
-                chance = randint(1, 100)
-                if cor == cor1:
-                    chance = randint(1, 100)
-                else:
-                    chance = 0
-                
-                if chance <= 1:
-                    cor = cor2
-                    energy = 500
-                else:
-                    cor = cor1
-                    energy = 300
                 dx1 = randint(-1, 1)
                 dx2 = randint(-1, 1)
                 dy1 = randint(-1, 1)
@@ -85,8 +70,8 @@ def level1():
                     dx2 = 1
                     dy1 = -1
                     dy2 = 1
-                new_cell1 = Cell(1*dx1, 1*dy1, cell.rect.x, cell.rect.y, energy, cor)
-                new_cell2 = Cell(1*dx2, 1*dy2, cell.rect.x, cell.rect.y, energy, cor)
+                new_cell1 = Cell(1*dx1, 1*dy1, cell.rect.x, cell.rect.y, 600)
+                new_cell2 = Cell(1*dx2, 1*dy2, cell.rect.x, cell.rect.y, 600)
                 cells.add(new_cell1, new_cell2)
                 cells.remove(cell)
 
