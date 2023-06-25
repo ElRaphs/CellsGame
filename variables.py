@@ -22,3 +22,4 @@ MMbg = pg.transform.scale(pg.image.load('./images/MMbg.jpg'), (largura, altura))
 
 MMfont = pg.font.Font('./fonts/MMfont.ttf', 100)
 MMBfont = pg.font.Font('./fonts/MMfont.ttf', 50)
+gameFont = pg.font.Font('./fonts/MMfont.ttf', 25)

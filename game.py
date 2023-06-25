@@ -44,12 +44,20 @@ def level1():
     energies = pg.sprite.Group()
     cells = pg.sprite.Group()
     cells.add(test_cell)
+
     cor1 = azul
     cor = cor1
     cor2 = vermelho
+
     c_energy1 = 300
     c_energy = c_energy1
     c_energy2 = 600
+
+    chance1 = randint(1, 100)
+    chance = chance1
+    chance2 = 1
+
+    ambient = Ambient(300, 10, 7)
 
     for c in range(500):
         energy = Energy(randint(0, largura), randint(0, altura))
@@ -64,21 +72,22 @@ def level1():
         cells.draw(tela)
         cells.update(tela)
 
+        ambient.draw(f'temperatura: {ambient.temp} K', tela, vermelho, 0)
+        ambient.draw(f'pressão: {ambient.press} Pa', tela, azul, 250)
+        ambient.draw(f'pH: {ambient.acid}', tela, amarelo, 2*250)
+        ambient.draw(f'Radioatividade: {ambient.rad} Bq', tela, verde, 3*250)
+
         collisions = pg.sprite.groupcollide(cells, energies, False, True)
         for cell, energy_list in collisions.items():
             for energy in energy_list:
-                chance = randint(1, 100)
+                if chance > 1:
+                    cor = cor1
+                    c_energy = c_energy1
+                    chance = randint(1, 100)
                 if chance <= 1:
                     cor = cor2
                     c_energy = c_energy2
-                else:
-                    cor = cor1
-                    c_energy = c_energy1
-
-                if cor == cor2:
-                    chance = 0
-                else:
-                    chance == randint(1, 100)
+                    chance = chance2
 
                 dx1 = randint(-1, 1)
                 dx2 = randint(-1, 1)
@@ -89,8 +98,8 @@ def level1():
                     dx2 = 1
                     dy1 = -1
                     dy2 = 1
-                new_cell1 = Cell(1 * dx1, 1 * dy1, cell.rect.x, cell.rect.y, c_energy, cor)
-                new_cell2 = Cell(1 * dx2, 1 * dy2, cell.rect.x, cell.rect.y, c_energy, cor)
+                new_cell1 = Cell(1 * dx1, 1 * dy1, cell.rect.x, cell.rect.y, c_energy, cor, chance)
+                new_cell2 = Cell(1 * dx2, 1 * dy2, cell.rect.x, cell.rect.y, c_energy, cor, chance)
                 cells.add(new_cell1, new_cell2)
                 cells.remove(cell)
 
