@@ -47,12 +47,16 @@ class Cell(pg.sprite.Sprite):
         pg.draw.circle(screen, self.color, self.rect.center, self.radius)
         pg.draw.circle(screen, preto, self.rect.center, self.radius/2)
 
+        if self.chance <= 1:
+            self.color = vermelho
+            self.chance = 1
+
         self.rect.x += self.xvel
         self.rect.y += self.yvel
 
-        if self.rect.right >= largura or self.rect.left <= 0:
+        if self.rect.right >= largura or self.rect.left <= 40:
             self.xvel *= -1
-        if self.rect.bottom >= altura or self.rect.top <= 0:
+        if self.rect.bottom >= altura or self.rect.top <= 40:
             self.yvel *= -1
 
         if self.energy <= 0:
@@ -76,13 +80,27 @@ class Ambient:
     def __init__(self, temp, rad, acid):
         self.temp = temp
         self.rad = rad
-        self.press = temp*8.31
+        self.press = int(temp*8.31)
         self.acid = acid
 
-    def draw(self, text, screen, color, x):
-        self.rect = pg.Rect(x, 0, 250, 40)
+    def draw(self, text, screen, color, xr, xt, yt):
+        self.rect = pg.Rect(xr, 0, 250, 40)
         pg.draw.rect(screen, color, self.rect)
-        draw_text(text, gameFont, preto, screen, x, 10)
+        draw_text(text, gameFont, preto, screen, xr+xt, yt)
+
+class SlideButton:
+    def __init__(self, color, y):
+        self.color = color
+        self.slide = pg.Rect(0, y+10, 200, 5)
+        self.rect = pg.Rect(0, y, 30, 30)
+
+    def draw(self, screen):
+        pg.draw.rect(screen, preto, self.slide)
+        pg.draw.rect(screen, self.color, self.rect)
+        
+
+
+        
 
         
 

@@ -17,9 +17,12 @@ amarelo = (242, 231, 0)
 rosa = (236, 0, 242)
 cinza = (150, 150, 150)
 preto = (0, 0, 0)
+azul_claro = (153, 217, 234)
 
 MMbg = pg.transform.scale(pg.image.load('./images/MMbg.jpg'), (largura, altura))
 
 MMfont = pg.font.Font('./fonts/MMfont.ttf', 100)
 MMBfont = pg.font.Font('./fonts/MMfont.ttf', 50)
 gameFont = pg.font.Font('./fonts/MMfont.ttf', 25)
+
+painel = pg.Rect(0, 600, 1000, 150)

@@ -53,55 +53,72 @@ def level1():
     c_energy = c_energy1
     c_energy2 = 600
 
-    chance1 = randint(1, 100)
-    chance = chance1
-    chance2 = 1
-
     ambient = Ambient(300, 10, 7)
 
-    for c in range(500):
-        energy = Energy(randint(0, largura), randint(0, altura))
+    tempoFPS = 0
+    tempo = 0
+
+    tempBtn = SlideButton(vermelho, 600)
+
+    for c in range(400):
+        energy = Energy(randint(40, largura), randint(40, altura))
         energies.add(energy)
 
     while True:
+        tempoFPS += 1
+        if len(energies) <= 100:
+            energy = Energy(randint(40, largura), randint(40, altura))
+            energies.add(energy)
+        if tempoFPS == 60:
+            tempoFPS = 0
+            tempo += 1
         relogio.tick(fps)
         tela.fill(cinza)
+
+        mx, my = pg.mouse.get_pos()
 
         energies.draw(tela)
         energies.update()
         cells.draw(tela)
         cells.update(tela)
 
-        ambient.draw(f'temperatura: {ambient.temp} K', tela, vermelho, 0)
-        ambient.draw(f'pressão: {ambient.press} Pa', tela, azul, 250)
-        ambient.draw(f'pH: {ambient.acid}', tela, amarelo, 2*250)
-        ambient.draw(f'Radioatividade: {ambient.rad} Bq', tela, verde, 3*250)
+        ambient.draw(f'temperatura: {ambient.temp} K', tela, vermelho, 0, 5, 10)
+        ambient.draw(f'pressão: {ambient.press} Pa', tela, azul, 250, 5, 5)
+        ambient.draw(f'pH: {ambient.acid}', tela, amarelo, 2*250, 5, 10)
+        ambient.draw(f'Radioatividade: {ambient.rad} Bq', tela, verde, 3*250, 5, 10)
 
-        collisions = pg.sprite.groupcollide(cells, energies, False, True)
-        for cell, energy_list in collisions.items():
-            for energy in energy_list:
-                if chance > 1:
-                    cor = cor1
-                    c_energy = c_energy1
+        draw_text(f'tempo: {tempo} s', gameFont, preto, tela, 5, 40)
+        draw_text(f'Células: {len(cells)}', gameFont, preto, tela, 5, 60)
+
+        pg.draw.rect(tela, azul_claro, painel)
+
+        ambient.temp = tempBtn.rect.centerx + 285
+
+        if tempBtn.rect.collidepoint(mx, my):
+            if pg.mouse.get_pressed()[0] and mx <= 300:
+                tempBtn.rect.centerx = mx
+
+        tempBtn.draw(tela)
+        if ambient.temp <= 400:
+            collisions = pg.sprite.groupcollide(cells, energies, False, True)
+            for cell, energy_list in collisions.items():
+                for energy in energy_list:
+                    
+                    dx1 = randint(-1, 1)
+                    dx2 = randint(-1, 1)
+                    dy1 = randint(-1, 1)
+                    dy2 = randint(-1, 1)
+                    if (dx1 == 0 and dy1 == 0) or (dx2 == 0 and dy2 == 0) or (dx1 == dx2 and dy1 == dy2):
+                        dx1 = -1
+                        dx2 = 1
+                        dy1 = -1
+                        dy2 = 1
+
                     chance = randint(1, 100)
-                if chance <= 1:
-                    cor = cor2
-                    c_energy = c_energy2
-                    chance = chance2
-
-                dx1 = randint(-1, 1)
-                dx2 = randint(-1, 1)
-                dy1 = randint(-1, 1)
-                dy2 = randint(-1, 1)
-                if (dx1 == 0 and dy1 == 0) or (dx2 == 0 and dy2 == 0) or (dx1 == dx2 and dy1 == dy2):
-                    dx1 = -1
-                    dx2 = 1
-                    dy1 = -1
-                    dy2 = 1
-                new_cell1 = Cell(1 * dx1, 1 * dy1, cell.rect.x, cell.rect.y, c_energy, cor, chance)
-                new_cell2 = Cell(1 * dx2, 1 * dy2, cell.rect.x, cell.rect.y, c_energy, cor, chance)
-                cells.add(new_cell1, new_cell2)
-                cells.remove(cell)
+                    new_cell1 = Cell(1 * dx1, 1 * dy1, cell.rect.x, cell.rect.y, c_energy, cor, chance)
+                    new_cell2 = Cell(1 * dx2, 1 * dy2, cell.rect.x, cell.rect.y, c_energy, cor, chance)
+                    cells.add(new_cell1, new_cell2)
+                    cells.remove(cell)
 
         for event in pg.event.get():
             if event.type == QUIT:
