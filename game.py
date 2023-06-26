@@ -50,7 +50,7 @@ def level1():
     cor2 = vermelho
 
     c_energy1 = 300
-    c_energy = c_energy1
+    c_energy = 300
     c_energy2 = 600
 
     ambient = Ambient(300, 10, 7)
@@ -58,16 +58,18 @@ def level1():
     tempoFPS = 0
     tempo = 0
 
-    tempBtn = SlideButton(vermelho, 600)
+    tempBtn = SlideButton(vermelho, 0, 610)
+    acidBtn = SlideButton(amarelo, 7, 660)
+    radBtn = SlideButton(verde, 0, 710)
 
     for c in range(400):
-        energy = Energy(randint(40, largura), randint(40, altura))
+        energy = Energy(randint(0, largura), randint(40, 600))
         energies.add(energy)
 
     while True:
         tempoFPS += 1
         if len(energies) <= 100:
-            energy = Energy(randint(40, largura), randint(40, altura))
+            energy = Energy(randint(40, largura), randint(40, 600))
             energies.add(energy)
         if tempoFPS == 60:
             tempoFPS = 0
@@ -87,11 +89,14 @@ def level1():
         ambient.draw(f'pH: {ambient.acid}', tela, amarelo, 2*250, 5, 10)
         ambient.draw(f'Radioatividade: {ambient.rad} Bq', tela, verde, 3*250, 5, 10)
 
+        pg.draw.rect(tela, branco, (0, 40, 130, 50))
         draw_text(f'tempo: {tempo} s', gameFont, preto, tela, 5, 40)
         draw_text(f'Células: {len(cells)}', gameFont, preto, tela, 5, 60)
 
         pg.draw.rect(tela, azul_claro, painel)
 
+        ambient.rad = radBtn.rect.centerx - 5
+        ambient.acid = acidBtn.rect.centerx-15
         ambient.temp = tempBtn.rect.centerx + 285
         ambient.press = int(ambient.temp*8.31)
 
@@ -99,27 +104,45 @@ def level1():
             if pg.mouse.get_pressed()[0] and mx <= 185 and mx >= 15:
                 tempBtn.rect.centerx = mx
 
-        tempBtn.draw(tela)
-        if ambient.temp <= 400:
-            collisions = pg.sprite.groupcollide(cells, energies, False, True)
-            for cell, energy_list in collisions.items():
-                for energy in energy_list:
-                    
-                    dx1 = randint(-1, 1)
-                    dx2 = randint(-1, 1)
-                    dy1 = randint(-1, 1)
-                    dy2 = randint(-1, 1)
-                    if (dx1 == 0 and dy1 == 0) or (dx2 == 0 and dy2 == 0) or (dx1 == dx2 and dy1 == dy2):
-                        dx1 = -1
-                        dx2 = 1
-                        dy1 = -1
-                        dy2 = 1
+        if acidBtn.rect.collidepoint(mx, my):
+            if pg.mouse.get_pressed()[0] and mx <= 29 and mx >=15:
+                acidBtn.rect.centerx = mx
+        
+        if radBtn.rect.collidepoint(mx, my):
+            if pg.mouse.get_pressed()[0] and mx <= 185 and mx >=15:
+                radBtn.rect.centerx = mx
 
+        tempBtn.draw(tela)
+        acidBtn.draw(tela)
+        radBtn.draw(tela)
+
+        collisions = pg.sprite.groupcollide(cells, energies, False, True)
+        for cell, energy_list in collisions.items():
+            for energy in energy_list:
+                chance = randint(1, 100)
+                if cor == vermelho:
+                    chance = 1
+
+                if chance == 1:
+                    cor = vermelho
+
+                if chance == 1 and cor == azul:
                     chance = randint(1, 100)
-                    new_cell1 = Cell(1 * dx1, 1 * dy1, cell.rect.x, cell.rect.y, c_energy, cor, chance)
-                    new_cell2 = Cell(1 * dx2, 1 * dy2, cell.rect.x, cell.rect.y, c_energy, cor, chance)
-                    cells.add(new_cell1, new_cell2)
-                    cells.remove(cell)
+
+                dx1 = randint(-1, 1)
+                dx2 = randint(-1, 1)
+                dy1 = randint(-1, 1)
+                dy2 = randint(-1, 1)
+                if (dx1 == 0 and dy1 == 0) or (dx2 == 0 and dy2 == 0) or (dx1 == dx2 and dy1 == dy2):
+                    dx1 = -1
+                    dx2 = 1
+                    dy1 = -1
+                    dy2 = 1
+
+                new_cell1 = Cell(1*dx1, 1*dy1, cell.rect.x, cell.rect.y, c_energy, cor, ambient)
+                new_cell2 = Cell(1*dx2, 1*dy2, cell.rect.x, cell.rect.y, c_energy, cor, ambient)
+                cells.add(new_cell1, new_cell2)
+                cells.remove(cell)
 
         for event in pg.event.get():
             if event.type == QUIT:

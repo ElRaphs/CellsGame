@@ -29,7 +29,7 @@ class MMButton:
                    self.rect.x+5, self.rect.y+5)
         
 class Cell(pg.sprite.Sprite):
-    def __init__(self, xvel, yvel, x, y, energy, color, chance):
+    def __init__(self, xvel, yvel, x, y, energy, color, ambient):
         super().__init__()
         self.radius = 10
         self.image = pg.Surface((int(self.radius * sqrt(2)), int(self.radius * sqrt(2))))
@@ -40,40 +40,24 @@ class Cell(pg.sprite.Sprite):
         self.rect.y = y
         self.energy = energy
         self.color = color
-        self.chance = chance
+        self.ambient = ambient
 
     def update(self, screen):
         self.energy -= 1
         pg.draw.circle(screen, self.color, self.rect.center, self.radius)
         pg.draw.circle(screen, preto, self.rect.center, self.radius/2)
 
-        if self.chance <= 1:
-            self.color = vermelho
-            self.chance = 1
-
         self.rect.x += self.xvel
         self.rect.y += self.yvel
 
-        if self.rect.right >= largura or self.rect.left <= 40:
+        if self.rect.right >= largura or self.rect.left <= 0:
             self.xvel *= -1
-        if self.rect.bottom >= altura or self.rect.top <= 40:
+        if self.rect.bottom >= 600 or self.rect.top <= 40:
             self.yvel *= -1
 
-        if self.energy <= 0:
+        if self.energy <= 0 or self.ambient.temp >= 400 or self.ambient.acid < 4:
             self.kill()
-
-test_cell = Cell(1, 1, 100, 100, 600, azul, 5)
-        
-class Energy(pg.sprite.Sprite):
-    def __init__(self, x, y):
-        super().__init__()
-        self.image = pg.Surface((5, 5))
-        self.image.fill(amarelo)
-        self.rect = self.image.get_rect()
-        self.rect.center = (x, y)
-
-    def update(self):
-        if pg.sprite.collide_rect(self, test_cell):
+        if self.ambient.press > 3500 or self.ambient.rad > 40:
             self.kill()
 
 class Ambient:
@@ -88,11 +72,26 @@ class Ambient:
         pg.draw.rect(screen, color, self.rect)
         draw_text(text, gameFont, preto, screen, xr+xt, yt)
 
+startamb = Ambient(300, 10, 7)
+test_cell = Cell(1, 1, 100, 100, 600, azul, startamb)
+        
+class Energy(pg.sprite.Sprite):
+    def __init__(self, x, y):
+        super().__init__()
+        self.image = pg.Surface((5, 5))
+        self.image.fill(amarelo)
+        self.rect = self.image.get_rect()
+        self.rect.center = (x, y)
+
+    def update(self):
+        if pg.sprite.collide_rect(self, test_cell):
+            self.kill()
+
 class SlideButton:
-    def __init__(self, color, y):
+    def __init__(self, color, x, y):
         self.color = color
         self.slide = pg.Rect(0, y+10, 200, 5)
-        self.rect = pg.Rect(0, y, 30, 30)
+        self.rect = pg.Rect(x, y, 30, 30)
 
     def draw(self, screen):
         pg.draw.rect(screen, preto, self.slide)
