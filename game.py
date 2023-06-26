@@ -93,9 +93,10 @@ def level1():
         pg.draw.rect(tela, azul_claro, painel)
 
         ambient.temp = tempBtn.rect.centerx + 285
+        ambient.press = int(ambient.temp*8.31)
 
         if tempBtn.rect.collidepoint(mx, my):
-            if pg.mouse.get_pressed()[0] and mx <= 300:
+            if pg.mouse.get_pressed()[0] and mx <= 185 and mx >= 15:
                 tempBtn.rect.centerx = mx
 
         tempBtn.draw(tela)

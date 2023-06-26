@@ -80,7 +80,7 @@ class Ambient:
     def __init__(self, temp, rad, acid):
         self.temp = temp
         self.rad = rad
-        self.press = int(temp*8.31)
+        self.press = int(self.temp*8.31)
         self.acid = acid
 
     def draw(self, text, screen, color, xr, xt, yt):
