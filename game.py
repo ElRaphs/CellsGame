@@ -44,14 +44,8 @@ def level1():
     energies = pg.sprite.Group()
     cells = pg.sprite.Group()
     cells.add(test_cell)
-
-    cor1 = azul
-    cor = cor1
-    cor2 = vermelho
-
-    c_energy1 = 300
-    c_energy = 300
-    c_energy2 = 600
+    
+    c_energy = 150
 
     ambient = Ambient(300, 10, 7)
 
@@ -68,7 +62,7 @@ def level1():
 
     while True:
         tempoFPS += 1
-        if len(energies) <= 100:
+        if len(energies) <= 150:
             energy = Energy(randint(40, largura), randint(40, 600))
             energies.add(energy)
         if tempoFPS == 60:
@@ -119,16 +113,6 @@ def level1():
         collisions = pg.sprite.groupcollide(cells, energies, False, True)
         for cell, energy_list in collisions.items():
             for energy in energy_list:
-                chance = randint(1, 100)
-                if cor == vermelho:
-                    chance = 1
-
-                if chance == 1:
-                    cor = vermelho
-
-                if chance == 1 and cor == azul:
-                    chance = randint(1, 100)
-
                 dx1 = randint(-1, 1)
                 dx2 = randint(-1, 1)
                 dy1 = randint(-1, 1)
@@ -139,8 +123,8 @@ def level1():
                     dy1 = -1
                     dy2 = 1
 
-                new_cell1 = Cell(1*dx1, 1*dy1, cell.rect.x, cell.rect.y, c_energy, cor, ambient)
-                new_cell2 = Cell(1*dx2, 1*dy2, cell.rect.x, cell.rect.y, c_energy, cor, ambient)
+                new_cell1 = Cell(1*dx1, 1*dy1, cell.rect.x, cell.rect.y, c_energy, ambient)
+                new_cell2 = Cell(1*dx2, 1*dy2, cell.rect.x, cell.rect.y, c_energy, ambient)
                 cells.add(new_cell1, new_cell2)
                 cells.remove(cell)
 

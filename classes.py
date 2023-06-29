@@ -29,7 +29,7 @@ class MMButton:
                    self.rect.x+5, self.rect.y+5)
         
 class Cell(pg.sprite.Sprite):
-    def __init__(self, xvel, yvel, x, y, energy, color, ambient):
+    def __init__(self, xvel, yvel, x, y, energy, ambient, tempRes, acidRes, radRes):
         super().__init__()
         self.radius = 10
         self.image = pg.Surface((int(self.radius * sqrt(2)), int(self.radius * sqrt(2))))
@@ -39,13 +39,14 @@ class Cell(pg.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
         self.energy = energy
-        self.color = color
+        self.color = azul
         self.ambient = ambient
+        self.tempRes = tempRes
+        self.acidRes = acidRes
+        self.radRes = radRes
 
     def update(self, screen):
         self.energy -= 1
-        pg.draw.circle(screen, self.color, self.rect.center, self.radius)
-        pg.draw.circle(screen, preto, self.rect.center, self.radius/2)
 
         self.rect.x += self.xvel
         self.rect.y += self.yvel
@@ -54,6 +55,9 @@ class Cell(pg.sprite.Sprite):
             self.xvel *= -1
         if self.rect.bottom >= 600 or self.rect.top <= 40:
             self.yvel *= -1
+
+        pg.draw.circle(screen, self.color, self.rect.center, self.radius)
+        pg.draw.circle(screen, preto, self.rect.center, self.radius/2)
 
         if self.energy <= 0 or self.ambient.temp >= 400 or self.ambient.acid < 4:
             self.kill()
@@ -73,7 +77,7 @@ class Ambient:
         draw_text(text, gameFont, preto, screen, xr+xt, yt)
 
 startamb = Ambient(300, 10, 7)
-test_cell = Cell(1, 1, 100, 100, 600, azul, startamb)
+test_cell = Cell(1, 1, 100, 100, 600, startamb)
         
 class Energy(pg.sprite.Sprite):
     def __init__(self, x, y):
