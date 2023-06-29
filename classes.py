@@ -59,10 +59,14 @@ class Cell(pg.sprite.Sprite):
         pg.draw.circle(screen, self.color, self.rect.center, self.radius)
         pg.draw.circle(screen, preto, self.rect.center, self.radius/2)
 
-        if self.energy <= 0 or self.ambient.temp >= 400 or self.ambient.acid < 4:
-            self.kill()
-        if self.ambient.press > 3500 or self.ambient.rad > 40:
-            self.kill()
+        if self.ambient.temp >= 400:
+            self.tempRes -= 3
+        if self.ambient.rad >= 20:
+            self.radRes -= 3
+        if self.ambient.acid <= 4 or self.ambient.acid >= 10:
+            self.acidRes -= 3
+        if self.energy <= 0 or self.tempRes <= 0 or self.radRes <= 0 or self.acidRes <= 0:
+            self.kill() 
 
 class Ambient:
     def __init__(self, temp, rad, acid):
@@ -77,7 +81,7 @@ class Ambient:
         draw_text(text, gameFont, preto, screen, xr+xt, yt)
 
 startamb = Ambient(300, 10, 7)
-test_cell = Cell(1, 1, 100, 100, 600, startamb)
+test_cell = Cell(1, 1, 100, 100, 600, startamb, 150, 150, 150)
         
 class Energy(pg.sprite.Sprite):
     def __init__(self, x, y):
