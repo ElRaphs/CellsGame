@@ -79,7 +79,7 @@ def level1():
         cells.update(tela)
 
         ambient.draw(f'temperatura: {ambient.temp} K', tela, vermelho, 0, 5, 10)
-        ambient.draw(f'pressão: {ambient.press} Pa', tela, azul, 250, 5, 5)
+        ambient.draw(f'Salinidade {ambient.salt} mg/g', tela, azul, 250, 5, 10)
         ambient.draw(f'pH: {ambient.acid}', tela, amarelo, 2*250, 5, 10)
         ambient.draw(f'Radioatividade: {ambient.rad} Bq', tela, verde, 3*250, 5, 10)
 
@@ -92,7 +92,6 @@ def level1():
         ambient.rad = radBtn.rect.centerx - 5
         ambient.acid = acidBtn.rect.centerx-15
         ambient.temp = tempBtn.rect.centerx + 285
-        ambient.press = int(ambient.temp*8.31)
 
         if tempBtn.rect.collidepoint(mx, my):
             if pg.mouse.get_pressed()[0] and mx <= 185 and mx >= 15:
@@ -123,8 +122,8 @@ def level1():
                     dy1 = -1
                     dy2 = 1
 
-                new_cell1 = Cell(1*dx1, 1*dy1, cell.rect.x, cell.rect.y, c_energy, ambient, 150, 150, 150)
-                new_cell2 = Cell(1*dx2, 1*dy2, cell.rect.x, cell.rect.y, c_energy, ambient, 150, 150, 150)
+                new_cell1 = Cell(1*dx1, 1*dy1, cell.rect.x, cell.rect.y, c_energy, ambient, 150, 150, 150, 150)
+                new_cell2 = Cell(1*dx2, 1*dy2, cell.rect.x, cell.rect.y, c_energy, ambient, 150, 150, 150, 150)
                 cells.add(new_cell1, new_cell2)
                 cells.remove(cell)
 

@@ -29,7 +29,7 @@ class MMButton:
                    self.rect.x+5, self.rect.y+5)
         
 class Cell(pg.sprite.Sprite):
-    def __init__(self, xvel, yvel, x, y, energy, ambient, tempRes, acidRes, radRes):
+    def __init__(self, xvel, yvel, x, y, energy, ambient, tempRes, acidRes, radRes, saltRes):
         super().__init__()
         self.radius = 10
         self.image = pg.Surface((int(self.radius * sqrt(2)), int(self.radius * sqrt(2))))
@@ -44,12 +44,13 @@ class Cell(pg.sprite.Sprite):
         self.tempRes = tempRes
         self.acidRes = acidRes
         self.radRes = radRes
+        self.saltRes = saltRes
 
     def update(self, screen):
         self.energy -= 1
 
         self.rect.x += self.xvel
-        self.rect.y += self.yvel
+        self.rect.y += self.yvel    
 
         if self.rect.right >= largura or self.rect.left <= 0:
             self.xvel *= -1
@@ -72,7 +73,7 @@ class Ambient:
     def __init__(self, temp, rad, acid):
         self.temp = temp
         self.rad = rad
-        self.press = int(self.temp*8.31)
+        self.salt = 10
         self.acid = acid
 
     def draw(self, text, screen, color, xr, xt, yt):
@@ -81,7 +82,7 @@ class Ambient:
         draw_text(text, gameFont, preto, screen, xr+xt, yt)
 
 startamb = Ambient(300, 10, 7)
-test_cell = Cell(1, 1, 100, 100, 600, startamb, 150, 150, 150)
+test_cell = Cell(1, 1, 100, 100, 600, startamb, 150, 150, 150, 150)
         
 class Energy(pg.sprite.Sprite):
     def __init__(self, x, y):
