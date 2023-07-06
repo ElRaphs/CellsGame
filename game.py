@@ -122,8 +122,10 @@ def level1():
                     dy1 = -1
                     dy2 = 1
 
-                new_cell1 = Cell(1*dx1, 1*dy1, cell.rect.x, cell.rect.y, c_energy, ambient, 150, 150, 150, 150)
-                new_cell2 = Cell(1*dx2, 1*dy2, cell.rect.x, cell.rect.y, c_energy, ambient, 150, 150, 150, 150)
+                celltemp = cell.tempRes
+                cellcolor = cell.color
+                new_cell1 = Cell(1*dx1, 1*dy1, cell.rect.x, cell.rect.y, c_energy, ambient, 150, 150, 150, celltemp, cellcolor)
+                new_cell2 = Cell(1*dx2, 1*dy2, cell.rect.x, cell.rect.y, c_energy, ambient, 150, 150, 150, celltemp, cellcolor)
                 cells.add(new_cell1, new_cell2)
                 cells.remove(cell)
 
@@ -131,6 +133,12 @@ def level1():
             if event.type == QUIT:
                 pg.quit()
                 exit()
+
+        if len(cells) == 0:
+            print('game over')
+            print(Cell.showTemp())
+            pg.quit()
+            exit()
 
         pg.display.flip()
 
