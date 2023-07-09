@@ -10,7 +10,7 @@ pg.init()
 
 def main_menu():
     new_game_b = MMButton(400, 400, 212, 'Novo Jogo', MMBfont, verde, azul)
-    sair_b = MMButton(455, 650, 90, 'Sair', MMBfont, azul, verde)
+    sair_b = MMButton(455, 650, 90, 'Sair', MMBfont, azul, vermelho)
     credits_b = MMButton(415, 520, 170, 'Créditos', MMBfont, amarelo, rosa)    
 
     while True:
@@ -59,7 +59,6 @@ def level1():
     radBtn = SlideButton(verde, 0, 710)
 
     start_game = False
-    game_over = False
 
     for c in range(400):
         energy = Energy(randint(0, largura), randint(40, 600))
@@ -67,7 +66,7 @@ def level1():
 
     while True:
         
-        if len(energies) <= 150 and start_game:
+        if len(energies) <= 300 and start_game:
             energy = Energy(randint(40, largura), randint(40, 600))
             energies.add(energy)
         if start_game:
@@ -81,9 +80,8 @@ def level1():
         mx, my = pg.mouse.get_pos()
 
         energies.draw(tela)
-        energies.update()
-        cells.draw(tela)
         if start_game:
+            cells.draw(tela)
             cells.update(tela)
 
         ambient.draw(f'temperatura: {ambient.temp} K', tela, vermelho, 0, 5, 10)
@@ -133,9 +131,10 @@ def level1():
                     dy2 = 1
 
                 celltemp = cell.tempRes
+                cellRadRes = cell.radRes
                 cellcolor = cell.color
-                new_cell1 = Cell(1*dx1, 1*dy1, cell.rect.x, cell.rect.y, c_energy, ambient, 150, 150, 150, celltemp, cellcolor)
-                new_cell2 = Cell(1*dx2, 1*dy2, cell.rect.x, cell.rect.y, c_energy, ambient, 150, 150, 150, celltemp, cellcolor)
+                new_cell1 = Cell(1*dx1, 1*dy1, cell.rect.x, cell.rect.y, c_energy, ambient, cellRadRes, celltemp, cellcolor)
+                new_cell2 = Cell(1*dx2, 1*dy2, cell.rect.x, cell.rect.y, c_energy, ambient, cellRadRes, celltemp, cellcolor)
                 cells.add(new_cell1, new_cell2)
                 cells.remove(cell)
 
@@ -148,6 +147,8 @@ def level1():
                     main_menu()
                 if event.key == K_SPACE:
                     start_game = True
+                if event.key == K_RIGHT:
+                    radBtn.rect.centerx += 1
 
         if len(cells) == 0:
             draw_text('Todas as células estão mortas', gameFont, vermelho, tela, 350, altura/3)
@@ -155,11 +156,21 @@ def level1():
         pg.display.flip()
 
 def credits():
+    ny = -500
     while True:
         relogio.tick(fps)
-        tela.fill(preto)
+        tela.fill(branco)
+        tela.blit(creditsBG, (0, 0))
 
         draw_text('Esc: voltar', gameFont, branco, tela, 5, 5)
+        draw_text('Luis Felipe Moreira - Licenciatura em Química', MMBfont, laranja, tela, 50, ny)
+        draw_text('Luiz Felipe Crespo - Licenciatura em Física', MMBfont, vermelho, tela, 90, ny+100)
+        draw_text('Raphael Groppo - Licenciatura em Física', MMBfont, rosa, tela, 100, ny+200)
+        draw_text('Richardson de Miranda - Licenciatura em CMT', MMBfont, azul, tela, 50, ny+300)
+        draw_text('Vitor da Silva - Licenciatura em Biologia', MMBfont, verde_escuro, tela, 95, ny+400)
+        
+        if ny <= 120:
+            ny += 2
         for event in pg.event.get():
             if event.type == QUIT:
                 pg.quit()

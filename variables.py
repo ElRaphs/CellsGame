@@ -18,8 +18,12 @@ rosa = (236, 0, 242)
 cinza = (150, 150, 150)
 preto = (0, 0, 0)
 azul_claro = (153, 217, 234)
+verde_escuro = (34, 177, 76)
+laranja = (249, 118, 0)
 
 MMbg = pg.transform.scale(pg.image.load('./images/MMbg.jpg'), (largura, altura))
+creditsBG = pg.image.load('./images/creditsBG.jpg')
+creditsBG.set_alpha(50)
 
 MMfont = pg.font.Font('./fonts/MMfont.ttf', 100)
 MMBfont = pg.font.Font('./fonts/MMfont.ttf', 50)
