@@ -24,5 +24,6 @@ MMbg = pg.transform.scale(pg.image.load('./images/MMbg.jpg'), (largura, altura))
 MMfont = pg.font.Font('./fonts/MMfont.ttf', 100)
 MMBfont = pg.font.Font('./fonts/MMfont.ttf', 50)
 gameFont = pg.font.Font('./fonts/MMfont.ttf', 25)
+backFont = pg.font.Font('./fonts/MMfont.ttf', 10)
 
 painel = pg.Rect(0, 600, 1000, 150)

@@ -48,12 +48,9 @@ class Cell(pg.sprite.Sprite):
 
         self.count = 0
 
-    
-
-        if randint(1, 10) == 1:
+        if randint(1, 400) == 1:
             self.tempRes = randint(self.tempRes-50, self.tempRes+50)
             self.color = (randint(0, 255), randint(0, 255), randint(0, 255))
-
 
     def showTemp(self):
         return self.count

@@ -34,6 +34,8 @@ def main_menu():
 
         if new_game_b.rect.collidepoint(mpos) and click:
             level1()
+        if credits_b.rect.collidepoint(mpos) and click:
+            credits()
         if sair_b.rect.collidepoint(mpos) and click:
             pg.quit()
             exit()
@@ -133,12 +135,32 @@ def level1():
             if event.type == QUIT:
                 pg.quit()
                 exit()
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    main_menu()
 
         if len(cells) == 0:
             print('game over')
             print(Cell.showTemp())
             pg.quit()
             exit()
+
+        pg.display.flip()
+
+def credits():
+
+    while True:
+        relogio.tick(fps)
+        tela.fill(preto)
+
+        draw_text('Esc: voltar', gameFont, branco, tela, 5, 5)
+        for event in pg.event.get():
+            if event.type == QUIT:
+                pg.quit()
+                exit()
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    main_menu()
 
         pg.display.flip()
 
