@@ -58,18 +58,23 @@ def level1():
     acidBtn = SlideButton(amarelo, 7, 660)
     radBtn = SlideButton(verde, 0, 710)
 
+    start_game = False
+    game_over = False
+
     for c in range(400):
         energy = Energy(randint(0, largura), randint(40, 600))
         energies.add(energy)
 
     while True:
-        tempoFPS += 1
-        if len(energies) <= 150:
+        
+        if len(energies) <= 150 and start_game:
             energy = Energy(randint(40, largura), randint(40, 600))
             energies.add(energy)
-        if tempoFPS == 60:
-            tempoFPS = 0
-            tempo += 1
+        if start_game:
+            tempoFPS += 1        
+            if tempoFPS == 60:
+                tempoFPS = 0
+                tempo += 1
         relogio.tick(fps)
         tela.fill(cinza)
 
@@ -78,7 +83,8 @@ def level1():
         energies.draw(tela)
         energies.update()
         cells.draw(tela)
-        cells.update(tela)
+        if start_game:
+            cells.update(tela)
 
         ambient.draw(f'temperatura: {ambient.temp} K', tela, vermelho, 0, 5, 10)
         ambient.draw(f'Salinidade {ambient.salt} mg/g', tela, azul, 250, 5, 10)
@@ -88,6 +94,8 @@ def level1():
         pg.draw.rect(tela, branco, (0, 40, 130, 50))
         draw_text(f'tempo: {tempo} s', gameFont, preto, tela, 5, 40)
         draw_text(f'Células: {len(cells)}', gameFont, preto, tela, 5, 60)
+        if start_game == False:
+            draw_text('Pressione barra de espaço para começar', gameFont, vermelho, tela, 290, altura/3)
 
         pg.draw.rect(tela, azul_claro, painel)
 
@@ -138,17 +146,15 @@ def level1():
             if event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
                     main_menu()
+                if event.key == K_SPACE:
+                    start_game = True
 
         if len(cells) == 0:
-            print('game over')
-            print(Cell.showTemp())
-            pg.quit()
-            exit()
+            draw_text('Todas as células estão mortas', gameFont, vermelho, tela, 350, altura/3)
 
         pg.display.flip()
 
 def credits():
-
     while True:
         relogio.tick(fps)
         tela.fill(preto)
