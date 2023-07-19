@@ -5,24 +5,43 @@ from variables import *
 from functions import *
 from classes import *
 from random import *
+from pygame import mixer
 
 pg.init()
 
+mixer.music.play(-1)
+
 def main_menu():
-    new_game_b = MMButton(400, 400, 212, 'Novo Jogo', MMBfont, verde, azul)
+    mixer.music.unpause()
+
+    new_game_b = MMButton(400, 350, 212, 'Novo Jogo', MMBfont, verde, azul)
+    wiki_b = MMButton(455, 450, 90, 'Wiki', MMBfont, laranja, azul_claro)
     sair_b = MMButton(455, 650, 90, 'Sair', MMBfont, azul, vermelho)
-    credits_b = MMButton(415, 520, 170, 'Créditos', MMBfont, amarelo, rosa)    
+    credits_b = MMButton(415, 550, 170, 'Créditos', MMBfont, amarelo, rosa)
+
+    count = 0
+
+    colors = [verde, vermelho, branco, azul, amarelo, azul_claro, rosa, laranja, verde_escuro, roxo]
+    colorInd = 0    
 
     while True:
         mpos = pg.mouse.get_pos()
         relogio.tick(fps)
         tela.blit(MMbg, (0, 0))
+        count += 1
+        if count == 60:
+            count = 0
+            colorInd += 1
+        if colorInd == 10:
+            colorInd = 0
 
-        draw_text('Inserir Título', MMfont, verde, tela, 250, 20)
+        draw_text('Simélula', MMfont, colors[colorInd], tela, 330, 20)
 
         new_game_b.update(tela)
         sair_b.update(tela)
         credits_b.update(tela)
+        wiki_b.update(tela)
+
         click = False
         for event in pg.event.get():
             if event.type == QUIT:
@@ -31,11 +50,14 @@ def main_menu():
             if event.type == MOUSEBUTTONDOWN:
                 if event.button == 1:
                     click = True
+                    clicked.play()
 
         if new_game_b.rect.collidepoint(mpos) and click:
             level1()
         if credits_b.rect.collidepoint(mpos) and click:
             credits()
+        if wiki_b.rect.collidepoint(mpos) and click:
+            wiki_screen()
         if sair_b.rect.collidepoint(mpos) and click:
             pg.quit()
             exit()
@@ -43,10 +65,11 @@ def main_menu():
         pg.display.flip()
 
 def level1():
+    pg.mixer.music.pause()
     energies = pg.sprite.Group()
     cells = pg.sprite.Group()
     cells.add(test_cell)
-    
+   
     c_energy = 150
 
     ambient = Ambient(300, 10, 7)
@@ -65,7 +88,7 @@ def level1():
         energies.add(energy)
 
     while True:
-        
+       
         if len(energies) <= 300 and start_game:
             energy = Energy(randint(40, largura), randint(40, 600))
             energies.add(energy)
@@ -108,7 +131,7 @@ def level1():
         if acidBtn.rect.collidepoint(mx, my):
             if pg.mouse.get_pressed()[0] and mx <= 29 and mx >=15:
                 acidBtn.rect.centerx = mx
-        
+       
         if radBtn.rect.collidepoint(mx, my):
             if pg.mouse.get_pressed()[0] and mx <= 185 and mx >=15:
                 radBtn.rect.centerx = mx
@@ -133,6 +156,7 @@ def level1():
                 celltemp = cell.tempRes
                 cellRadRes = cell.radRes
                 cellcolor = cell.color
+               
                 new_cell1 = Cell(1*dx1, 1*dy1, cell.rect.x, cell.rect.y, c_energy, ambient, cellRadRes, celltemp, cellcolor)
                 new_cell2 = Cell(1*dx2, 1*dy2, cell.rect.x, cell.rect.y, c_energy, ambient, cellRadRes, celltemp, cellcolor)
                 cells.add(new_cell1, new_cell2)
@@ -151,7 +175,152 @@ def level1():
                     radBtn.rect.centerx += 1
 
         if len(cells) == 0:
+            tempDeaths = (Cell.tempDeaths / Cell.totalDeaths) * 100
+            tempDeathsText = f'Mortes por Temperatura: {tempDeaths:.2f}%'
+
+            radDeaths = (Cell.radDeaths / Cell.totalDeaths) * 100
+            radDeathsText = f'Mortes por Radiação: {radDeaths:.2f}%'
+
+            acidDeaths = (Cell.acidDeaths / Cell.totalDeaths) * 100
+            acidDeathsText = f'Mortes por pH: {acidDeaths:.2f}%'
+
             draw_text('Todas as células estão mortas', gameFont, vermelho, tela, 350, altura/3)
+            draw_text(tempDeathsText, gameFont, preto, tela, 355, altura/3 + 30)
+            draw_text(radDeathsText, gameFont, preto, tela, 355, altura/3 + 60)
+            draw_text(acidDeathsText, gameFont, preto, tela, 355, altura/3 + 90)
+            draw_text(f'Todal de células na fase: {Cell.totalDeaths}', gameFont, preto, tela, 350, altura/3 + 120)
+
+
+        pg.display.flip()
+
+def wiki_screen():
+    tempB = MMButton(10, 150, 300, '- Temperatura', MMBfont, azul_claro, vermelho)
+    saltB = MMButton(10, 250, 250, '- Salinidade', MMBfont, laranja, rosa)
+    acidB = MMButton(10, 350, 200, '- Nível pH', MMBfont, verde, amarelo)
+    radB = MMButton(10, 450, 220, '- Radiação', MMBfont, roxo, verde)
+    energyB = MMButton(10, 550, 200, '- Energia', MMBfont, amarelo, roxo)
+
+    while True:
+        mpos = pg.mouse.get_pos()
+        relogio.tick(fps)
+        tela.blit(wikiBG, (0, 0))
+
+        draw_text('Esc: voltar', gameFont, branco, tela, 5, 5)
+        tempB.update(tela)
+        saltB.update(tela)
+        acidB.update(tela)
+        radB.update(tela)
+        energyB.update(tela)
+
+        click = False
+        for event in pg.event.get():
+            if event.type == QUIT:
+                pg.quit()
+                exit()
+            if event.type == MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    click = True
+                    clicked.play()
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    clicked.play()
+                    main_menu()
+
+        if tempB.rect.collidepoint(mpos) and click:
+            temp_wiki()
+        if saltB.rect.collidepoint(mpos) and click:
+            salt_wiki()
+        if radB.rect.collidepoint(mpos) and click:
+            rad_wiki()
+        if energyB.rect.collidepoint(mpos) and click:
+            energy_wiki()
+        if acidB.rect.collidepoint(mpos) and click:
+            acid_wiki()
+
+        pg.display.flip()
+
+def temp_wiki():
+    while True:
+        relogio.tick(fps)
+        tela.blit(temp_wiki_bg, (0, 0))
+
+        draw_text('Esc: voltar', gameFont, vermelho, tela, 890, 5)
+        for event in pg.event.get():
+            if event.type == QUIT:
+                pg.quit()
+                exit()
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    clicked.play()
+                    wiki_screen()
+
+        pg.display.flip()
+
+def salt_wiki():
+    while True:
+        relogio.tick(fps)
+        tela.blit(salt_bg, (0, 0))
+
+        draw_text('Esc: voltar', gameFont, vermelho, tela, 890, 5)
+        for event in pg.event.get():
+            if event.type == QUIT:
+                pg.quit()
+                exit()
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    clicked.play()
+                    wiki_screen()
+
+        pg.display.flip()
+
+def rad_wiki():
+    while True:
+        relogio.tick(fps)
+        tela.blit(rad_bg, (0, 0))
+
+        draw_text('Esc: voltar', gameFont, vermelho, tela, 890, 5)
+        for event in pg.event.get():
+            if event.type == QUIT:
+                pg.quit()
+                exit()
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    clicked.play()
+                    wiki_screen()
+
+        pg.display.flip()
+
+def acid_wiki():
+    while True:
+        relogio.tick(fps)
+        tela.blit(acid_bg, (0, 0))
+
+        draw_text('Esc: voltar', gameFont, vermelho, tela, 890, 5)
+        for event in pg.event.get():
+            if event.type == QUIT:
+                pg.quit()
+                exit()
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    clicked.play()
+                    wiki_screen()
+
+        pg.display.flip()
+
+def energy_wiki():
+    while True:
+        relogio.tick(fps)
+        tela.blit(energy_bg, (0, 0))
+
+        draw_text('Esc: voltar', gameFont, vermelho, tela, 890, 5)
+        for event in pg.event.get():
+            if event.type == QUIT:
+                pg.quit()
+                exit()
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    clicked.play()
+                    wiki_screen()
 
         pg.display.flip()
 
@@ -162,13 +331,13 @@ def credits():
         tela.fill(branco)
         tela.blit(creditsBG, (0, 0))
 
-        draw_text('Esc: voltar', gameFont, branco, tela, 5, 5)
+        draw_text('Esc: voltar', gameFont, preto, tela, 5, 5)
         draw_text('Luis Felipe Moreira - Licenciatura em Química', MMBfont, laranja, tela, 50, ny)
         draw_text('Luiz Felipe Crespo - Licenciatura em Física', MMBfont, vermelho, tela, 90, ny+100)
         draw_text('Raphael Groppo - Licenciatura em Física', MMBfont, rosa, tela, 100, ny+200)
         draw_text('Richardson de Miranda - Licenciatura em CMT', MMBfont, azul, tela, 50, ny+300)
         draw_text('Vitor da Silva - Licenciatura em Biologia', MMBfont, verde_escuro, tela, 95, ny+400)
-        
+       
         if ny <= 120:
             ny += 2
         for event in pg.event.get():
@@ -177,6 +346,7 @@ def credits():
                 exit()
             if event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
+                    clicked.play()
                     main_menu()
 
         pg.display.flip()
