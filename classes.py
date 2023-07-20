@@ -29,12 +29,17 @@ class MMButton:
        
 class Cell(pg.sprite.Sprite):
 
-    tempDeaths = 0
+    highTempDeaths = 0
+    lowTempDeaths = 0
+   
     radDeaths = 0
-    acidDeaths = 0
+   
+    lowAcidDeaths = 0
+    highAcidDeaths = 0
+   
     totalDeaths = 0
    
-    def __init__(self, xvel, yvel, x, y, energy, ambient, radRes=10, tempRes=300, color=azul, acidRes=7, saltRes=10):
+    def __init__(self, xvel, yvel, x, y, energy, ambient, radRes=10, tempRes=295, color=azul, acidRes=7, saltRes=10):
         super().__init__()
         self.radius = 10
         self.image = pg.Surface((int(self.radius * sqrt(2)), int(self.radius * sqrt(2))))
@@ -51,17 +56,16 @@ class Cell(pg.sprite.Sprite):
         self.radRes = radRes
         self.saltRes = saltRes
 
-        if (self.ambient.rad)*10 != 399:
-             self.MutTemp = randint(1, 400-((self.ambient.rad)*10))
-        else:
-             self.MutTemp = randint(1, 400-((self.ambient.rad+1)*10))
+        if (self.ambient.rad)*5 <= 399:
+             self.MutTemp = randint(1, 400-((self.ambient.rad)*5))
+       
+             
         self.MutRad = randint(1, 400-(self.ambient.rad*10))
-
-        self.tempDeaths = 0
 
         if self.MutTemp == 1:
             self.tempRes = randint(self.tempRes-50, self.tempRes+50)
             self.color = (randint(0, 255), randint(0, 255), randint(0, 255))
+           
         if self.MutRad == 1:
             self.radRes = randint(self.radRes-5, self.radRes+5)
             self.color = (randint(0, 255), randint(0, 255), randint(0, 255))
@@ -82,18 +86,34 @@ class Cell(pg.sprite.Sprite):
         pg.draw.circle(screen, self.color, self.rect.center, self.radius)
         pg.draw.circle(screen, preto, self.rect.center, self.radius/2)
 
-        if self.ambient.temp >= self.tempRes+30 or self.ambient.temp <= self.tempRes-30:
+
+        if self.ambient.temp >= self.tempRes+30:
             self.energy -= 2
             if self.energy <= 0:
-                 Cell.tempDeaths += 1
+                 Cell.highTempDeaths += 1
+       
+
+        if self.ambient.temp <= self.tempRes-30:
+            self.energy -= 2
+            if self.energy <= 0:
+                 Cell.lowTempDeaths += 1
+
+                 
         if self.ambient.rad >= self.radRes+10:
             self.energy -= 2
             if self.energy <= 0:
                  Cell.radDeaths += 1
-        if self.ambient.acid <= 4 or self.ambient.acid >= 10:
+                 
+        if self.ambient.acid <= 4:
             self.energy -= 2
             if self.energy <=0:
-                 Cell.acidDeaths += 1
+                 Cell.lowAcidDeaths += 1
+
+        if self.ambient.acid >= 10:
+            self.energy -= 2
+            if self.energy <=0:
+                 Cell.highAcidDeaths += 1
+                 
         if self.energy <= 0:
             Cell.totalDeaths += 1
             self.kill()
@@ -111,7 +131,7 @@ class Ambient:
         pg.draw.rect(screen, color, self.rect)
         draw_text(text, gameFont, preto, screen, xr+xt, yt)
 
-startamb = Ambient(300, 10, 7)
+startamb = Ambient(350, 10, 7)
 test_cell = Cell(1, 1, 100, 100, 600, startamb)
        
 
