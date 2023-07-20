@@ -58,12 +58,17 @@ class Cell(pg.sprite.Sprite):
 
         if (self.ambient.rad)*5 <= 399:
              self.MutTemp = randint(1, 400-((self.ambient.rad)*5))
+             self.Mutacid = randint(1,  400-((self.ambient.rad)*5))
        
              
         self.MutRad = randint(1, 400-(self.ambient.rad*10))
 
         if self.MutTemp == 1:
             self.tempRes = randint(self.tempRes-50, self.tempRes+50)
+            self.color = (randint(0, 255), randint(0, 255), randint(0, 255))
+
+        if self.Mutacid == 1:
+            self.acidRes = randint(self.acidRes-3, self.acidRes+3)
             self.color = (randint(0, 255), randint(0, 255), randint(0, 255))
            
         if self.MutRad == 1:
@@ -104,15 +109,16 @@ class Cell(pg.sprite.Sprite):
             if self.energy <= 0:
                  Cell.radDeaths += 1
                  
-        if self.ambient.acid <= 4:
+        if self.ambient.acid <= self.acidRes-3:
             self.energy -= 2
             if self.energy <=0:
                  Cell.lowAcidDeaths += 1
 
-        if self.ambient.acid >= 10:
+        if self.ambient.acid >= self.acidRes+3:
             self.energy -= 2
             if self.energy <=0:
                  Cell.highAcidDeaths += 1
+
                  
         if self.energy <= 0:
             Cell.totalDeaths += 1

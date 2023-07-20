@@ -170,8 +170,8 @@ def level1():
 
         ambient.rad = radBtn.rect.centerx - 5
         ambient.acid = acidBtn.rect.centerx - 15
-        ambient.acid = 7
         ambient.temp = tempBtn.rect.centerx + 200
+        ambient.salt = ambient.acid+23.2
 
         if tempBtn.rect.collidepoint(mx, my):
             if pg.mouse.get_pressed()[0] and mx <= 185 and mx >= 15:
@@ -222,6 +222,8 @@ def level1():
                     start_game = True
                 if event.key == K_RIGHT:
                     radBtn.rect.centerx += 1
+                if event.key == K_LEFT:
+                    radBtn.rect.centerx -= 1
                 if event.key == K_e:
                     stop = True
 
@@ -250,7 +252,7 @@ def level1():
 
             energyDeathsText = f'Mortes por fome: {energyDeathsPercent:.2f}%'
 
-            if totalTempDeaths > energyDeaths and totalTempDeaths > totalAcidDeaths and totalTempDeaths > Cell.radDeaths:
+            if totalTempDeaths > totalAcidDeaths and totalTempDeaths > Cell.radDeaths:
                 if highTempDeaths > lowTempDeaths:
                     tela.blit(MtempAlta, (0, 0))
                     show_stats(branco, tela, altura, highTempDeathsText, lowTempDeathsText, highAcidDeathsText,
@@ -267,7 +269,7 @@ def level1():
                                 lowAcidDeathsText, radDeathsText, energyDeathsText, Cell, gameFont)
                     draw_text('Houve um mesmo número de mortes por alta e baixa temperatura!', gameFont, preto, tela, 10, altura-60)
 
-            if totalAcidDeaths > energyDeaths and totalAcidDeaths > totalTempDeaths and totalAcidDeaths > Cell.radDeaths:
+            if totalAcidDeaths > totalTempDeaths and totalAcidDeaths > Cell.radDeaths:
                 if highAcidDeaths > lowAcidDeaths:
                     tela.blit(MphAlto, (0, 0))
                     show_stats(branco, tela, altura, highTempDeathsText, lowTempDeathsText, highAcidDeathsText,
@@ -283,12 +285,12 @@ def level1():
                                 lowAcidDeathsText, radDeathsText, energyDeathsText, Cell, gameFont)
                     draw_text('Houve um mesmo número de mortes por alto e baixo pH!', gameFont, preto, tela, 10, altura-60)
 
-            if energyDeaths > totalTempDeaths and energyDeaths > totalAcidDeaths and energyDeaths > Cell.radDeaths:
-                show_stats(branco, tela, altura, highTempDeathsText, lowTempDeathsText, highAcidDeathsText,
-                                lowAcidDeathsText, radDeathsText, energyDeathsText, Cell, gameFont)
-                draw_text('Maior quantidade de mortes foi por falta de energia!', gameFont, preto, tela, 10, altura-60)
+            #if energyDeaths > totalTempDeaths and energyDeaths > totalAcidDeaths and energyDeaths > Cell.radDeaths:
+                #show_stats(branco, tela, altura, highTempDeathsText, lowTempDeathsText, highAcidDeathsText,
+                                #lowAcidDeathsText, radDeathsText, energyDeathsText, Cell, gameFont)
+                #draw_text('Maior quantidade de mortes foi por falta de energia!', gameFont, preto, tela, 10, altura-60)
 
-            if Cell.radDeaths > energyDeaths and Cell.radDeaths > totalAcidDeaths and Cell.radDeaths > totalTempDeaths:
+            if Cell.radDeaths > totalAcidDeaths and Cell.radDeaths > totalTempDeaths:
                 tela.blit(Mrad, (0, 0))
                 show_stats(branco, tela, altura, highTempDeathsText, lowTempDeathsText, highAcidDeathsText,
                                 lowAcidDeathsText, radDeathsText, energyDeathsText, Cell, gameFont)
