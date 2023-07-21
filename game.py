@@ -6,7 +6,6 @@ from functions import *
 from classes import *
 from random import *
 from pygame import mixer
-from fase2 import level2
 
 pg.init()
 
@@ -62,51 +61,6 @@ def main_menu():
         if sair_b.rect.collidepoint(mpos) and click:
             pg.quit()
             exit()
-
-        pg.display.flip()
-
-def select_level():
-    phase1b = MMButton(50, 270, 155, '- Fase 1', MMBfont, azul_claro, azul)
-    phase2b = MMButton(50, 370, 155, '- Fase 2', MMBfont, amarelo, laranja)
-    phase3b = MMButton(50, 470, 155, '- Fase 3', MMBfont, laranja, vermelho)
-    obj = MMbg
-
-    while True:
-        mpos = pg.mouse.get_pos()
-        relogio.tick(fps)
-
-        tela.blit(obj, (0, 0))
-
-        phase1b.update(tela)
-        phase2b.update(tela)
-        phase3b.update(tela)
-
-        click = False
-        for event in pg.event.get():
-            if event.type == QUIT:
-                pg.quit()
-                exit()
-            if event.type == MOUSEBUTTONDOWN:
-                if event.button == 1:
-                    click = True
-            if event.type == KEYDOWN:
-                if event.key == K_ESCAPE:
-                    main_menu()
-
-        if phase1b.rect.collidepoint(mpos):
-            obj = f1obj
-            if click:
-                level1()
-        elif phase2b.rect.collidepoint(mpos):
-            obj = f2obj
-            if click:
-                level1()
-        elif phase3b.rect.collidepoint(mpos):
-            obj = f3obj
-            if click:
-                level1()
-        else:
-            obj = MMbg
 
         pg.display.flip()
 
