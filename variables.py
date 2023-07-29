@@ -53,3 +53,4 @@ ambience = mixer.music.load('./sounds/ambience_sound.mp3')
 clicked = mixer.Sound('./sounds/click.wav')
 
 painel = pg.Rect(0, 600, 1000, 150)
+

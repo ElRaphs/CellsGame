@@ -6,6 +6,7 @@ from functions import *
 from classes import *
 from random import *
 from pygame import mixer
+from matplotlib import pyplot as plt
 
 pg.init()
 
@@ -21,9 +22,9 @@ def main_menu():
 
     count = 0
 
-    colors = [verde, vermelho, branco, azul, amarelo, azul_claro, rosa, laranja, verde_escuro, roxo]
+    colors = [verde, vermelho, branco, azul, amarelo, azul_claro,
+               rosa, laranja, verde_escuro, roxo]
     colorInd = 0    
-
     while True:
         mpos = pg.mouse.get_pos()
         relogio.tick(fps)
@@ -85,6 +86,14 @@ def level1():
 
     start_game = False
 
+    timelist = []
+    cellslist = []
+    templist = []
+    radlist = []
+    saltlist = []
+    energlist = []
+    acidlist = []
+
     for c in range(400):
         energy = Energy(randint(0, largura), randint(40, 600))
         energies.add(energy)
@@ -95,10 +104,18 @@ def level1():
             energy = Energy(randint(40, largura), randint(40, 600))
             energies.add(energy)
         if start_game:
-            tempoFPS += 1        
+            tempoFPS += 1
             if tempoFPS == 60:
                 tempoFPS = 0
                 tempo += 1
+                timelist.append(tempo)
+                templist.append(ambient.temp)
+                cellslist.append(len(cells))
+                radlist.append(ambient.rad)
+                acidlist.append(ambient.acid)
+                energlist.append(len(energies))
+                saltlist.append(ambient.salt)
+
         relogio.tick(fps)
         tela.fill(cinza)
 
@@ -180,75 +197,10 @@ def level1():
                     radBtn.rect.centerx -= 1
                 if event.key == K_e:
                     stop = True
-
+        
         if len(cells) == 0 or stop:
-            start_game = False
-            tela.fill(preto)
-            highTempDeaths = (Cell.highTempDeaths / Cell.totalDeaths) * 100
-            highTempDeathsText = f'Mortes por Alta Temperatura: {highTempDeaths:.2f}%'
-            lowTempDeaths = (Cell.lowTempDeaths / Cell.totalDeaths) * 100
-            lowTempDeathsText = f'Mortes por Baixa Temperatura: {lowTempDeaths:.2f}%'
-            totalTempDeaths = Cell.highTempDeaths + Cell.lowTempDeaths
-
-            radDeaths = (Cell.radDeaths / Cell.totalDeaths) * 100
-            radDeathsText = f'Mortes por Radiação: {radDeaths:.2f}%'
-
-            highAcidDeaths = (Cell.highAcidDeaths / Cell.totalDeaths) * 100
-            highAcidDeathsText = f'Mortes por Alto pH: {highAcidDeaths:.2f}%'
-            lowAcidDeaths = (Cell.lowAcidDeaths / Cell.totalDeaths) * 100
-            lowAcidDeathsText = f'Mortes por Baixo pH: {lowAcidDeaths:.2f}%'
-            totalAcidDeaths = Cell.highAcidDeaths + Cell.lowAcidDeaths
-
-            variableDeaths = totalTempDeaths + Cell.radDeaths + totalAcidDeaths
-
-            energyDeaths = Cell.totalDeaths - variableDeaths
-            energyDeathsPercent = (energyDeaths / Cell.totalDeaths) * 100
-
-            energyDeathsText = f'Mortes por fome: {energyDeathsPercent:.2f}%'
-
-            if totalTempDeaths > totalAcidDeaths and totalTempDeaths > Cell.radDeaths:
-                if highTempDeaths > lowTempDeaths:
-                    tela.blit(MtempAlta, (0, 0))
-                    show_stats(branco, tela, altura, highTempDeathsText, lowTempDeathsText, highAcidDeathsText,
-                                lowAcidDeathsText, radDeathsText, energyDeathsText, Cell, gameFont)
-                    draw_text('Maior quantidade de mortes foi por alta temperatura!', gameFont, branco,
-                               tela, 10, altura-60)
-                if lowTempDeaths > highTempDeaths:
-                    tela.blit(MtempBaixa, (0, 0))
-                    show_stats(branco, tela, altura, highTempDeathsText, lowTempDeathsText, highAcidDeathsText,
-                                lowAcidDeathsText, radDeathsText, energyDeathsText, Cell, gameFont)
-                    draw_text('Maior quantidade de mortes foi por baixa temperatura!', gameFont, preto, tela, 10, altura-60)
-                if lowTempDeaths == highTempDeaths:
-                    show_stats(branco, tela, altura, highTempDeathsText, lowTempDeathsText, highAcidDeathsText,
-                                lowAcidDeathsText, radDeathsText, energyDeathsText, Cell, gameFont)
-                    draw_text('Houve um mesmo número de mortes por alta e baixa temperatura!', gameFont, preto, tela, 10, altura-60)
-
-            if totalAcidDeaths > totalTempDeaths and totalAcidDeaths > Cell.radDeaths:
-                if highAcidDeaths > lowAcidDeaths:
-                    tela.blit(MphAlto, (0, 0))
-                    show_stats(branco, tela, altura, highTempDeathsText, lowTempDeathsText, highAcidDeathsText,
-                                lowAcidDeathsText, radDeathsText, energyDeathsText, Cell, gameFont)
-                    draw_text('Maior quantidade de mortes foi por alto pH!', gameFont, preto, tela, 10, altura-60)
-                if lowAcidDeaths > highAcidDeaths:
-                    tela.blit(MphBaixo, (0, 0))
-                    show_stats(branco, tela, altura, highTempDeathsText, lowTempDeathsText, highAcidDeathsText,
-                                lowAcidDeathsText, radDeathsText, energyDeathsText, Cell, gameFont)
-                    draw_text('Maior quantidade de mortes foi por baixo pH!', gameFont, preto, tela, 10, altura-60)
-                if highAcidDeaths == lowAcidDeaths:
-                    show_stats(branco, tela, altura, highTempDeathsText, lowTempDeathsText, highAcidDeathsText,
-                                lowAcidDeathsText, radDeathsText, energyDeathsText, Cell, gameFont)
-                    draw_text('Houve um mesmo número de mortes por alto e baixo pH!', gameFont, preto, tela, 10, altura-60)
-
-            #if energyDeaths > totalTempDeaths and energyDeaths > totalAcidDeaths and energyDeaths > Cell.radDeaths:
-                #show_stats(branco, tela, altura, highTempDeathsText, lowTempDeathsText, highAcidDeathsText,
-                                #lowAcidDeathsText, radDeathsText, energyDeathsText, Cell, gameFont)
-                #draw_text('Maior quantidade de mortes foi por falta de energia!', gameFont, preto, tela, 10, altura-60)
-
-            if Cell.radDeaths > totalAcidDeaths and Cell.radDeaths > totalTempDeaths:
-                tela.blit(Mrad, (0, 0))
-                show_stats(branco, tela, altura, highTempDeathsText, lowTempDeathsText, highAcidDeathsText,
-                                lowAcidDeathsText, radDeathsText, energyDeathsText, Cell, gameFont)
-                draw_text('Maior quantidade de mortes foi por radiação!', gameFont, preto, tela, 10, altura-60)
+            pg.quit()
+            show_graphs(timelist, cellslist, templist, saltlist, acidlist, radlist, energlist, radlist)
 
         pg.display.flip()
 

@@ -28,7 +28,6 @@ class MMButton:
         draw_text(self.text, self.font, GColor, screen, self.rect.x+5, self.rect.y+5)
        
 class Cell(pg.sprite.Sprite):
-
     highTempDeaths = 0
     lowTempDeaths = 0
    
@@ -124,7 +123,6 @@ class Cell(pg.sprite.Sprite):
             Cell.totalDeaths += 1
             self.kill()
          
-
 class Ambient:
     def __init__(self, temp, rad, acid):
         self.temp = temp
@@ -140,7 +138,6 @@ class Ambient:
 startamb = Ambient(350, 10, 7)
 test_cell = Cell(1, 1, 100, 100, 600, startamb)
        
-
 class Energy(pg.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()
@@ -148,7 +145,6 @@ class Energy(pg.sprite.Sprite):
         self.image.fill(amarelo)
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
-
 
 class SlideButton:
     def __init__(self, color, x, y):
