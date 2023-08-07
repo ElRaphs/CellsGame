@@ -6,7 +6,6 @@ from functions import *
 from classes import *
 from random import *
 from pygame import mixer
-from math import pi
 
 pg.init()
 
@@ -177,8 +176,8 @@ def level1():
                 cellRadRes = cell.radRes
                 cellcolor = cell.color
                
-                new_cell1 = Cell(1*dx1, 1*dy1, cell.rect.x, cell.rect.y, c_energy, ambient, cellRadRes, celltemp, cellcolor, list=colorlist)
-                new_cell2 = Cell(1*dx2, 1*dy2, cell.rect.x, cell.rect.y, c_energy, ambient, cellRadRes, celltemp, cellcolor, list=colorlist)
+                new_cell1 = Cell(1*dx1, 1*dy1, cell.rect.x, cell.rect.y, c_energy, ambient, cellRadRes, celltemp, cellcolor)
+                new_cell2 = Cell(1*dx2, 1*dy2, cell.rect.x, cell.rect.y, c_energy, ambient, cellRadRes, celltemp, cellcolor)
                 cells.add(new_cell1, new_cell2)
                 cells.remove(cell)
 
@@ -199,15 +198,8 @@ def level1():
                     stop = True
         
         if len(cells) == 0 or stop:
-            tela.fill(branco)
-            dx = 500
-            dy = 750/2
-            for d in range(0, len(colorlist)):
-                pg.draw.circle(tela, colorlist[d], (dx, dy), 10)
-                pg.draw.circle(tela, preto, (dx, dy), 5)
-                
-            #pg.quit()
-            #how_graphs(timelist, cellslist, templist, saltlist, acidlist, radlist, energlist, radlist)
+            pg.quit()
+            show_graphs(timelist, cellslist, templist, saltlist, acidlist, radlist, energlist)
 
         pg.display.flip()
 

@@ -38,7 +38,7 @@ class Cell(pg.sprite.Sprite):
    
     totalDeaths = 0
    
-    def __init__(self, xvel, yvel, x, y, energy, ambient, radRes=10, tempRes=295, color=azul, acidRes=7, saltRes=10, list=[]):
+    def __init__(self, xvel, yvel, x, y, energy, ambient, radRes=10, tempRes=295, color=azul, acidRes=7, saltRes=10):
         super().__init__()
         self.radius = 10
         self.image = pg.Surface((int(self.radius * sqrt(2)), int(self.radius * sqrt(2))))
@@ -64,18 +64,15 @@ class Cell(pg.sprite.Sprite):
         if self.MutTemp == 1:
             self.tempRes = randint(self.tempRes-50, self.tempRes+50)
             self.color = (randint(0, 255), randint(0, 255), randint(0, 255))
-            list.append(self.color)
-
+ 
         if self.Mutacid == 1:
             self.acidRes = randint(self.acidRes-3, self.acidRes+3)
             self.color = (randint(0, 255), randint(0, 255), randint(0, 255))
-            list.append(self.color)
-           
+
         if self.MutRad == 1:
             self.radRes = randint(self.radRes-5, self.radRes+5)
             self.color = (randint(0, 255), randint(0, 255), randint(0, 255))
-            list.append(self.color)
-           
+
     def update(self, screen):
         self.energy -= 1
 
@@ -133,7 +130,7 @@ class Ambient:
 
 colorlist = []
 startamb = Ambient(350, 10, 7)
-test_cell = Cell(1, 1, 100, 100, 600, startamb, list=colorlist)
+test_cell = Cell(1, 1, 100, 100, 600, startamb)
 colorlist.append(test_cell.color)
        
 class Energy(pg.sprite.Sprite):
