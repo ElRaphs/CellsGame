@@ -199,7 +199,7 @@ def level1():
         
         if len(cells) == 0 or stop:
             pg.quit()
-            show_graphs(timelist, cellslist, templist, saltlist, acidlist, radlist, energlist)
+            show_graphs_in_tabs(timelist, cellslist, templist, saltlist, acidlist, radlist, energlist)
 
         pg.display.flip()
 

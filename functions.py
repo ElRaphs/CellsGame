@@ -1,4 +1,7 @@
-from matplotlib import pyplot as plt
+import tkinter as tk
+from tkinter import ttk
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 def draw_text(texto, fonte, cor, tela, posx, posy):
     TextObj = fonte.render(texto, True, cor)
@@ -16,54 +19,38 @@ def show_stats(cor, tela, high, HTD, LTD, HAD, LAD, RD, ED, CC, font):
     draw_text(ED, font, cor, tela, 10, high-120)
     draw_text(f'Total de células na fase: {CC.totalDeaths}', font, cor, tela, 10, high-90)
 
-def show_graphs(t, cellsN, y00, y01, y02, y10, y11):
-    fig, axs = plt.subplots(2, 3)
+def show_graphs_in_tabs(t, cellsN, y00, y01, y02, y10, y11):
+    root = tk.Tk()
+    root.title("Gráficos")
+    root.iconbitmap('./images/icon.ico')
 
-    axs[0, 0].plot(t, cellsN, color='b')
-    ax0 = axs[0, 0].twinx()
-    ax0.plot(t, y00, color='r')
-    axs[0, 0].set_title('Temperatura')
-    axs[0, 0].set_xlabel('tempo (s)')
-    axs[0, 0].set_ylabel('Células')
-    ax0.set_ylabel('Temperatura (K)')
+    tab_control = ttk.Notebook(root)
 
-    axs[0, 1].plot(t, cellsN, color='b')
-    ax1 = axs[0, 1].twinx()
-    ax1.plot(t, y01, color='g')
-    axs[0, 1].set_title('Salinidade')
-    axs[0, 1].set_xlabel('tempo (s)')
-    axs[0, 1].set_ylabel('Células')
-    ax1.set_ylabel('Salinidade (mg/L)')
+    tabs = ['Temperatura (K)', 'Salinidade (mg/L)', 'Acidez (pH)', 'Radiação (10¹² Bq)', 'Energia', 'Árvore']
+    graph_data = [y00, y01, y02, y10, y11, None]
 
-    axs[0, 2].plot(t, cellsN, color='b')
-    ax2 = axs[0, 2].twinx()
-    ax2.plot(t, y02, color='purple')
-    axs[0, 2].set_title('Acidez')
-    axs[0, 2].set_xlabel('tempo (s)')
-    axs[0, 2].set_ylabel('Células')
-    ax2.set_ylabel('Acidez (pH)')
+    for tab_title, data in zip(tabs, graph_data):
+        tab = ttk.Frame(tab_control)
+        tab_control.add(tab, text=tab_title)
+        
+        fig, ax = plt.subplots(figsize=(10, 6))
+        ax.plot(t, cellsN, color='b')
+        ax.set_xlabel('Tempo')
+        ax.set_ylabel('Células')
+        ax.set_title(tab_title)
 
-    axs[1, 0].plot(t, cellsN, color='b')
-    ax3 = axs[1, 0].twinx()
-    ax3.plot(t, y10, color='g')
-    axs[1, 0].set_title('Radiação')
-    axs[1, 0].set_xlabel('tempo (s)')
-    axs[1, 0].set_ylabel('Células')
-    ax3.set_ylabel('Radiação (10^6 Bq)')
+        if data is not None:
+            ax_twin = ax.twinx()
+            ax_twin.plot(t, data, color='r' if tab_title == 'Temperatura (K)' else
+                                      'g' if tab_title in ['Salinidade (mg/L)', 'Radiação (10¹² Bq)'] else
+                                      'yellow' if tab_title == 'Acidez (pH)' else
+                                      (1, 127/255, 39/255) if tab_title == 'Energia' else 'b')
+            ax_twin.set_ylabel(tab_title)
+        
+        canvas = FigureCanvasTkAgg(fig, master=tab)
+        canvas.draw()
+        canvas.get_tk_widget().pack()
 
-    axs[1, 1].plot(t, cellsN, color='b')
-    ax4 = axs[1, 1].twinx()
-    ax4.plot(t, y11, color=(1, 127/255, 39/255))
-    axs[1, 1].set_title('Energia')
-    axs[1, 1].set_xlabel('tempo (s)')
-    axs[1, 1].set_ylabel('Células')
-    ax4.set_ylabel('Energia')  
-
-    #axs[1, 2].plot(t, cellsN, color='b')
-    #ax5 = axs[1, 2].twinx()
-    #ax5.plot(t, y12)
-    #axs[1, 2].set_title('Árvore')
-
-    plt.tight_layout()
-    plt.show()  
+    tab_control.pack(expand=1, fill="both")
+    root.mainloop()  
 
