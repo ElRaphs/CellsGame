@@ -10,6 +10,7 @@ from pygame import mixer
 pg.init()
 
 mixer.music.play(-1)
+mixer.music.set_volume(0.1)
 
 def main_menu():
     mixer.music.unpause()
@@ -65,7 +66,7 @@ def main_menu():
         pg.display.flip()
 
 def level1():
-    pg.mixer.music.pause()
+    #pg.mixer.music.pause()
     energies = pg.sprite.Group()
     cells = pg.sprite.Group()
     cells.add(test_cell)
